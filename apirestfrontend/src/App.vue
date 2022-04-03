@@ -7,13 +7,13 @@
     </nav>
 
     <div class="container">
-      <form>
+      <form @submit.prevent="salvar">
         <label>Nome</label>
-        <input type="text" placeholder="Nome" />
+        <input type="text" placeholder="Nome" v-model="produto.nome" />
         <label>Quantidade</label>
-        <input type="number" placeholder="QTD" />
+        <input type="number" placeholder="QTD" v-model="produto.quantidade" />
         <label>Valor</label>
-        <input type="text" placeholder="Valor" />
+        <input type="text" placeholder="Valor" v-model="produto.valor" />
 
         <button class="waves-effect waves-light btn-small">
           Salvar<i class="material-icons left">save</i>
@@ -31,7 +31,7 @@
         </thead>
 
         <tbody>
-          <tr v-for="produto of produtos" :key="produto.id"> 
+          <tr v-for="produto of produtos" :key="produto.id">
             <td>{{ produto.nome }}</td>
             <td>{{ produto.quantidade }}</td>
             <td>{{ produto.preco }}</td>
@@ -51,24 +51,40 @@
 </template>
 
 <script>
-
-import Produto from './services/produtos'
+import Produto from "./services/produtos";
 
 export default {
-
-  data(){
+  data() {
     return {
-      produtos: []
-    }
+      produto: {
+        nome: "",
+        quantidade: "",
+        valor: "",
+      },
+      produtos: [],
+    };
   },
 
-  mounted(){
-    Produto.listar().then(resposta => {
-      this.produtos = resposta.data
-    })
-  }
-}
+  mounted() {
+    this.listar()
+  },
 
+  methods: {
+    listar() {
+      Produto.listar().then((resposta) => {
+        this.produtos = resposta.data;
+      });
+    },
+
+    salvar() {
+      Produto.salvar(this.produto).then((resposta) => {
+        this.produto = {}
+        alert("Salvo com sucesso!", resposta)
+        this.listar()
+      });
+    },
+  },
+};
 </script>
 
 <style></style>
