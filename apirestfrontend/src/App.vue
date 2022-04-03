@@ -7,7 +7,6 @@
     </nav>
 
     <div class="container">
-
       <ul>
         <li v-for="(erro, index) of errors" :key="index">
           campo <b>{{ erro.field }}</b> - {{ erro.defaultMessage }}
@@ -43,7 +42,10 @@
             <td>{{ produto.quantidade }}</td>
             <td>{{ produto.preco }}</td>
             <td>
-              <button class="waves-effect btn-small blue darken-1">
+              <button
+                @click="editar(produto)"
+                class="waves-effect btn-small blue darken-1"
+              >
                 <i class="material-icons">create</i>
               </button>
               <button class="waves-effect btn-small red darken-1">
@@ -64,6 +66,7 @@ export default {
   data() {
     return {
       produto: {
+        id: "",
         nome: "",
         quantidade: "",
         valor: "",
@@ -74,7 +77,7 @@ export default {
   },
 
   mounted() {
-    this.listar()
+    this.listar();
   },
 
   methods: {
@@ -85,14 +88,33 @@ export default {
     },
 
     salvar() {
-      Produto.salvar(this.produto).then((resposta) => {
-        this.produto = {}
-        alert("Salvo com sucesso!", resposta)
-        this.listar()
-        this.errors = []
-      }).catch(e => {
-        this.errors = e.response.data.errors;
-      })
+      if (!this.produto.id) {
+        Produto.salvar(this.produto)
+          .then((resposta) => {
+            this.produto = {};
+            alert("Salvo com sucesso!", resposta);
+            this.listar();
+            this.errors = [];
+          })
+          .catch((e) => {
+            this.errors = e.response.data.errors;
+          })
+      }else{
+        Produto.salvar(this.produto)
+          .then((resposta) => {
+            this.produto = {};
+            alert("Atualizado com sucesso!", resposta);
+            this.listar();
+            this.errors = [];
+          })
+          .catch((e) => {
+            this.errors = e.response.data.errors;
+          })
+      }
+    },
+
+    editar(produto) {
+      this.produto = produto;
     },
   },
 };
