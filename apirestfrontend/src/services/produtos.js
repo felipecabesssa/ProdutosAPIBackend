@@ -12,6 +12,10 @@ export default {
 
     atualizar:(produto) => {
         return http.put('produto', produto)
+    },
+
+    apagar:(produto) => {
+        return http.delete('produto', { data: produto })
     }
 
 }

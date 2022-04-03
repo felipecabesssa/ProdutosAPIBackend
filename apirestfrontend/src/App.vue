@@ -48,7 +48,10 @@
               >
                 <i class="material-icons">create</i>
               </button>
-              <button class="waves-effect btn-small red darken-1">
+              <button
+                @click="remover(produto)"
+                class="waves-effect btn-small red darken-1"
+              >
                 <i class="material-icons">delete_sweep</i>
               </button>
             </td>
@@ -98,8 +101,8 @@ export default {
           })
           .catch((e) => {
             this.errors = e.response.data.errors;
-          })
-      }else{
+          });
+      } else {
         Produto.salvar(this.produto)
           .then((resposta) => {
             this.produto = {};
@@ -109,12 +112,26 @@ export default {
           })
           .catch((e) => {
             this.errors = e.response.data.errors;
-          })
+          });
       }
     },
 
     editar(produto) {
       this.produto = produto;
+    },
+
+    remover(produto) {
+      if (confirm("Deseja excluir o produto?")) {
+        Produto.apagar(produto)
+          .then((resposta) => {
+            console.log('apagado', resposta);
+            this.listar();
+            this.errors = [];
+          })
+          .catch((e) => {
+            this.errors = e.response.data.errors;
+          });
+      }
     },
   },
 };

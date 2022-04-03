@@ -2,7 +2,10 @@ package br.com.produtos.apirestbackend.resources;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,7 @@ import br.com.produtos.apirestbackend.models.Produto;
 import br.com.produtos.apirestbackend.repositories.ProdutoRepository;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value="/api")
 public class ProdutoResource {
 
@@ -39,8 +43,9 @@ public class ProdutoResource {
 	}
 	
 	@DeleteMapping("/produto/{id}")
-	public void deletaProduto(@PathVariable(value="id") long id) {
-		produtoRepository.deleteById(id);
+	@Transactional
+	public void deletaProduto(@PathVariable(value="id") Produto id) {
+		produtoRepository.delete(id);
 	}
 	
 	@PutMapping("/produto/{id}")
