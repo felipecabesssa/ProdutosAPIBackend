@@ -7,6 +7,13 @@
     </nav>
 
     <div class="container">
+
+      <ul>
+        <li v-for="(erro, index) of errors" :key="index">
+          campo <b>{{ erro.field }}</b> - {{ erro.defaultMessage }}
+        </li>
+      </ul>
+
       <form @submit.prevent="salvar">
         <label>Nome</label>
         <input type="text" placeholder="Nome" v-model="produto.nome" />
@@ -62,6 +69,7 @@ export default {
         valor: "",
       },
       produtos: [],
+      errors: [],
     };
   },
 
@@ -81,7 +89,10 @@ export default {
         this.produto = {}
         alert("Salvo com sucesso!", resposta)
         this.listar()
-      });
+        this.errors = []
+      }).catch(e => {
+        this.errors = e.response.data.errors;
+      })
     },
   },
 };
